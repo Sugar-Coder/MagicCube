@@ -4,11 +4,13 @@
 
 #include <iostream>
 #include <math.h>
+#include <bitset>
+#include <vector>
 
 using namespace std;
 int main(){
-    float v = 0.99f;
-
-    int a = int(v+0.5);
-    cout << round(v);
+    vector<bitset<6> > map = {
+            0Xf0,0xff, 0x03
+    };
+    cout << map[2][1] << " " << map[2][0];
 }

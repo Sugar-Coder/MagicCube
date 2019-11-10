@@ -5,48 +5,50 @@
 #include "cube.h"
 #include <cmath>
 #include <iostream>
+#include <vector>
+#include <bitset>
 
 namespace cube3D{
 
     // Shader cube::shader("GLSL/shader.vs", "GLSL/shader.fs");
 
     float cube::block[180] = {
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // back
             0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
             -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
             -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  // front
             0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
             0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
             0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
             -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
             -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
-            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // left
             -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
             -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
             -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
             -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
             -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // right
             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
             0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
             0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
             0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
             0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // down
             0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
             0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
             0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
             -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
             -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // up
             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
             0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
             0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
@@ -55,13 +57,13 @@ namespace cube3D{
     };
 
     const glm::vec4 cube::colors[7] = {
-            glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), // top    (green)
-            glm::vec4(0.3f, 0.3f, 1.0f , 1.0f), // bottom (blue)
-            glm::vec4( 1.0f, 0.3f, 0.3f , 1.0f), // front  (red)
-            glm::vec4( 1.0f, 0.5f, 0.0f , 1.0f), // back   (orange)
-            glm::vec4( 1.0f, 1.0f, 0.0f , 1.0f), // left   (yellow)
-            glm::vec4( 1.0f, 1.0f, 1.0f , 1.0f), // right  (white)
-            glm::vec4( 1.0f, 1.0f, 1.0f , 0.0f)  // frame
+            glm::vec4( 1.0f, 1.0f, 0.2f , 1.0f), // up   (yellow)
+            glm::vec4( 1.0f, 1.0f, 1.0f , 1.0f), // bottom  (white)
+            glm::vec4( 1.0f, 0.3f, 0.3f , 1.0f), // right  (red)
+            glm::vec4( 1.0f, 0.5f, 0.0f , 1.0f), // left   (orange)
+            glm::vec4(0.3f, 0.3f, 1.0f , 1.0f), // front (blue)
+            glm::vec4(0.0f, 1.0f, 0.0f, 1.0f), // back    (green)
+            glm::vec4( 1.0f, 1.0f, 1.0f , 0.0f)  // no
     };
 
     const glm::vec3 cube::init_positions[N] = {
@@ -72,14 +74,14 @@ namespace cube3D{
             glm::vec3(0.0f, 1.0f, 0.0f), // 上中5
             glm::vec3(0.0f, -1.0f, 0.0f), // 下中6
 
-            glm::vec3(-1.0f, 1.0f, -1.0f), // 顶角0
-            glm::vec3(1.0f, 1.0f, -1.0f), // corner1
-            glm::vec3(1.0f, 1.0f, 1.0f), // corner2
-            glm::vec3(-1.0f, 1.0f, 1.0f), // corner3
-            glm::vec3(-1.0f, -1.0f, -1.0f), // 底角4
-            glm::vec3(1.0f, -1.0f, -1.0f), // corner 5
-            glm::vec3(1.0f, -1.0f, 1.0f), // corner 6
-            glm::vec3(-1.0f, -1.0f, 1.0f), // corner7
+            glm::vec3(-1.0f, -1.0f, -1.0f), // 底角0
+            glm::vec3(1.0f, -1.0f, -1.0f), // corner 1
+            glm::vec3(1.0f, -1.0f, 1.0f), // corner 2
+            glm::vec3(-1.0f, -1.0f, 1.0f), // corner3
+            glm::vec3(-1.0f, 1.0f, -1.0f), // 顶角4
+            glm::vec3(1.0f, 1.0f, -1.0f), // corner5
+            glm::vec3(1.0f, 1.0f, 1.0f), // corner6
+            glm::vec3(-1.0f, 1.0f, 1.0f), // corner7
 
             glm::vec3(-1.0f, 0.0f, -1.0f), // 中层棱0
             glm::vec3( 1.0f, 0.0f, -1.0f), // edge1
@@ -177,7 +179,28 @@ namespace cube3D{
         return this->positions[b];
     }
 
-    void cube::draw(Shader& shader, const glm::mat4 &model) {
+    // 画block_index的小块
+    void cube::draw(Shader& shader, const glm::mat4 &model, int block_index) {
+        //        MF, MB, ML, MR, MU, MD,
+        //        C0, C1, C2, C3, C4, C5, C6, C7,
+        //        E0, E1, E2, E3, E4, E5, E6, E7, E8, E9, EA, EB
+        //    前蓝 后绿 左橙 右红 下白 上黄
+        static std::vector<std::bitset<6> > map ={
+                0x10,0x20,0x08,0x04,0x01,0x02,
+                0x2A,0x26,0x16,0x1A, 0x29,0x25,0x15,0x19,
+                0x28,0x24,0x14,0x18, 0x21,0x05,0x11,0x09, 0x22, 0x06, 0x12, 0x0a
+        };
         shader.setMat4("model", model);
+        std::bitset<6> curmap = map[block_index];
+        glm::vec4 color;
+        for(int i = 5;i >= 0;i--){
+            if(curmap[i] != 0){
+                color = colors[i];
+            } else {
+                color = colors[6];
+            }
+            shader.setVec4("ourColor", color);
+            glDrawArrays(GL_TRIANGLES, (5-i) * 6, 6);
+        }
     }
 }

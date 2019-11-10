@@ -23,7 +23,7 @@ namespace cube3D {
         E0, E1, E2, E3, E4, E5, E6, E7, E8, E9, EA, EB
     };
     enum color_type{
-        green, blue, red, orange ,yellow, white, frame
+        green, blue, orange, red ,white, yellow, no
     };
 
     const static int N = 26;  // 小块个数
@@ -69,7 +69,7 @@ namespace cube3D {
         void rotate_cube(face_type t, int count = 1);  // 完成一次变换后更新model和position
         glm::vec3 get_position(int b) const;  // 获得某一块的当前位置
         glm::mat4 get_model(int b);
-        void draw(Shader& shader, const glm::mat4& model);
+        void draw(Shader& shader, const glm::mat4& model, int block_index);
     };
 
 }

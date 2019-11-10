@@ -19,7 +19,7 @@ int main()
 
     // glfw window creation
     // --------------------
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Clion with OpenGL", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "MagicCube", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -111,7 +111,13 @@ int main()
         shader.setVec4("ourColor",cube3D::cube::colors[0]);
 
         glBindVertexArray(VAO);
-        /*
+/*
+        for(int i = 0; i < cube3D::N; i++){ // success
+            glm::mat4 model = Cube.get_model(i);
+            Cube.draw(shader, model, i);
+        }
+        */
+
         float rotatespeed = 20.0f;
         float radians = (rotatespeed * glm::radians(glfwGetTime()) > glm::radians(90.0f) )? glm::radians(90.0f) : rotatespeed * glm::radians(glfwGetTime());
         if (radians == glm::radians(90.0f) && !change) {  // 第一个旋转结束
@@ -126,11 +132,9 @@ int main()
                     glm::mat4 model;
                     model = glm::rotate(model, radians, cube3D::y_axis);
                     model = glm::translate(model, Cube.get_position(i));
-                    shader.setMat4("model", model);
-                    glDrawArrays(GL_TRIANGLES, 0, 36);
+                    Cube.draw(shader, model, i);
                 } else {
-                    shader.setMat4("model", Cube.get_model(i));
-                    glDrawArrays(GL_TRIANGLES, 0, 36);
+                    Cube.draw(shader, Cube.get_model(i), i);
                 }
             }
         } else {
@@ -143,35 +147,37 @@ int main()
                     glm::mat4 model;
                     model = glm::rotate(model, rad2, cube3D::z_axis);
                     model = model * Cube.get_model(i);
-                    shader.setMat4("model", model);
-                    glDrawArrays(GL_TRIANGLES, 0, 36);
+                    //shader.setMat4("model", model);
+                    //glDrawArrays(GL_TRIANGLES, 0, 36);
+                    Cube.draw(shader, model, i);
                 } else {
-                    shader.setMat4("model", Cube.get_model(i));
-                    glDrawArrays(GL_TRIANGLES, 0, 36);
+                    // shader.setMat4("model", Cube.get_model(i));
+                    // glDrawArrays(GL_TRIANGLES, 0, 36);
+                    Cube.draw(shader, Cube.get_model(i), i);
                 }
             }
         }
-         */
-
-        shader.setVec4("ourColor", colors[1]);
+/*
+        shader.setVec4("ourColor", cube::colors[1]);
         glm::mat4 model;
-        model = glm::translate(model, middlePositions[0]);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
         shader.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 6);  // back
 
         shader.setVec4("ourColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)); // front
-        glDrawArrays(GL_TRIANGLES, 6, 6);
+        glDrawArrays(GL_TRIANGLES, 6, 6); // 前
 
-        shader.setVec4("ourColor", colors[2]); //
+        shader.setVec4("ourColor", cube::colors[2]); // 左
         glDrawArrays(GL_TRIANGLES, 12, 6); // 画剩余的24个顶点
 
-        shader.setVec4("ourColor", colors[3]);
+        shader.setVec4("ourColor", cube::colors[3]); // 右
         glDrawArrays(GL_TRIANGLES, 18, 6);
 
-        shader.setVec4("ourColor", colors[4]);
+        shader.setVec4("ourColor", cube::colors[4]); // 下
         glDrawArrays(GL_TRIANGLES, 24, 6);
 
         shader.setVec4("ourColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+        */
 /*
         float rotatespeed = 20.0f;
         float radians = (rotatespeed * glm::radians(glfwGetTime()) > glm::radians(90.0f) )? glm::radians(90.0f) : rotatespeed * glm::radians(glfwGetTime());
