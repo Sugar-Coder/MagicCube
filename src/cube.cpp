@@ -116,7 +116,7 @@ namespace cube3D{
         // std::cout << "the new position:" << position.x << " " << position.y << " " << position.z << std::endl;
     }
 
-    /* rotate a face 90 * count degree clockwise */
+    /* rotate a face 90 * count degree clockwise(look at the exact face */
     void cube::rotate_cube(cube3D::face_type t, int count) { // 更新旋转后的魔方
         glm::vec3 mask;
         glm::mat4 temp_model = glm::mat4(1.0f);
@@ -127,7 +127,7 @@ namespace cube3D{
                 break;
             case bottom:
                 temp_model = glm::rotate(temp_model, glm::radians(count * 90.0f), y_axis);
-                mask = glm::vec3(0.0f, 1.0f, 0.0f);
+                mask = glm::vec3(0.0f, -1.0f, 0.0f);
                 break;
             case front:
                 temp_model = glm::rotate(temp_model, glm::radians(count * -90.0f), z_axis);
@@ -171,7 +171,7 @@ namespace cube3D{
         }
     }
 
-    glm::mat4 cube::get_model(int b) {
+    glm::mat4 cube::get_model(int b) const {
         return this->models[b];
     }
 
@@ -180,7 +180,7 @@ namespace cube3D{
     }
 
     // 画block_index的小块
-    void cube::draw(Shader& shader, const glm::mat4 &model, int block_index) {
+    void cube::draw(Shader& shader, const glm::mat4 &model, int block_index) const{
         //        MF, MB, ML, MR, MU, MD,
         //        C0, C1, C2, C3, C4, C5, C6, C7,
         //        E0, E1, E2, E3, E4, E5, E6, E7, E8, E9, EA, EB

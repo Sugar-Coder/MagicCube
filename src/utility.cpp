@@ -14,6 +14,9 @@ Camera camera(glm::vec3(0.0f, 3.0f, 6.0f));  // 仅传入相机位置
 float deltaTime = 0.0f; // 当前帧与上一帧的时间差
 float lastFrame = 0.0f; // 上一帧的时间
 
+bool screen = false; // 无屏蔽
+bool finish[RN] = {true};
+
 void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
@@ -30,6 +33,32 @@ void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         //cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    if (!screen){
+        if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS){ // 上面(键盘U控制）
+            screen = true;
+            finish[U] = false;
+        }
+        if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS){  // 下面（键盘J控制）
+            screen = true;
+            finish[D] = false;
+        }
+        if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS){  // 左面（键盘K控制）
+            screen = true;
+            finish[L] = false;
+        }
+        if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS){ // 右面（键盘L控制）
+            screen = true;
+            finish[R] = false;
+        }
+        if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS){ // 正面（键盘I控制）
+            screen = true;
+            finish[F] = false;
+        }
+        if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS){ // 正面（键盘I控制）
+            screen = true;
+            finish[B] = false;
+        }
+    }
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)

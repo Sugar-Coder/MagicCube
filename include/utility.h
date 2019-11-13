@@ -26,6 +26,12 @@ extern Camera camera;  // 仅传入相机位置
 extern float deltaTime; // 当前帧与上一帧的时间差
 extern float lastFrame; // 上一帧的时间
 
+extern bool screen; // 屏蔽标志,有键被按下后被设置为true，直到一次旋转完成
+const int RN = 6;
+extern bool finish[RN]; // 按键被按下的标志，R, L, U, D, F, B
+// extern bool key_press[RN];   //           u, j, i, k, o, l
+enum rotate_type{R, L, U, D, F, B};
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow * window, double xpos, double ypos);

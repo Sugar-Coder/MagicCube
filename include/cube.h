@@ -68,8 +68,8 @@ namespace cube3D {
         /* rotate a face 90 * count degree clockwise */
         void rotate_cube(face_type t, int count = 1);  // 完成一次变换后更新model和position
         glm::vec3 get_position(int b) const;  // 获得某一块的当前位置
-        glm::mat4 get_model(int b);
-        void draw(Shader& shader, const glm::mat4& model, int block_index);
+        glm::mat4 get_model(int b) const;
+        void draw(Shader& shader, const glm::mat4& model, int block_index) const;
     };
 
 }

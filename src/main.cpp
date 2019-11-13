@@ -3,6 +3,7 @@
 #include "stb_image.h"
 #include "Shader.hpp"
 #include "cube.h"
+#include "drawer.h"
 
 using cube3D::cube;
 
@@ -43,25 +44,17 @@ int main()
     }
 
     cube3D::cube Cube;
-    /*
-    glm::vec3 p = Cube.get_position((cube3D::block_type)3);
-    printVec3(p);
-    glm::mat4 m = Cube.get_model((cube3D::block_type)3);
-    printMat4(m);
-     */
 
-    unsigned int VBO, VAO; // , EBO;
+    view_gl::drawer drawer;
+
+    unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    //glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cube::block), cube::block, GL_STATIC_DRAW);
-
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // position attribute vs中的位置，属性大小，，，步长，偏移量
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -80,7 +73,9 @@ int main()
     bool fini_rota = false;
     float rad2 = 0.0f;
     bool change = false;
-
+    for(int i = 0; i < 6; i++){
+        finish[i] = true;
+    }
     while (!glfwWindowShouldClose(window)) {
         // input
         // -----
@@ -111,23 +106,64 @@ int main()
         shader.setVec4("ourColor",cube3D::cube::colors[0]);
 
         glBindVertexArray(VAO);
-/*
-        for(int i = 0; i < cube3D::N; i++){ // success
-            glm::mat4 model = Cube.get_model(i);
-            Cube.draw(shader, model, i);
-        }
-        */
 
+        if(!finish[U]){
+            if(drawer.rotate_U(Cube, shader)){
+                finish[U] = true;
+                screen = false;
+            } else {
+                screen = true;
+            }
+        } else if(!finish[D]){
+            if(drawer.rotate_D(Cube, shader)){
+                finish[D] = true;
+                screen = false;
+            } else {
+                screen = true;
+            }
+        } else if(!finish[L]){
+            if(drawer.rotate_L(Cube, shader)){
+                finish[L] = true;
+                screen = false;
+            } else {
+                screen = true;
+            }
+        } else if(!finish[R]){
+            if(drawer.rotate_R(Cube, shader)){
+                finish[R] = true;
+                screen = false;
+            } else {
+                screen = true;
+            }
+        } else if(!finish[F]){
+            if(drawer.rotate_F(Cube, shader)){
+                finish[F] = true;
+                screen = false;
+            } else {
+                screen = true;
+            }
+        } else if(!finish[B]){
+            if(drawer.rotate_B(Cube, shader)){
+                finish[B] = true;
+                screen = false;
+            } else {
+                screen = true;
+            }
+        } else {
+            drawer.static_draw(Cube, shader);
+        }
+
+/*
         float rotatespeed = 20.0f;
         float radians = (rotatespeed * glm::radians(glfwGetTime()) > glm::radians(90.0f) )? glm::radians(90.0f) : rotatespeed * glm::radians(glfwGetTime());
         if (radians == glm::radians(90.0f) && !change) {  // 第一个旋转结束
             fini_rota = true;
-            Cube.rotate_cube(cube3D::top, -1); // 改变魔方状态
+            Cube.rotate_cube(cube3D::bottom, 1); // 改变魔方状态
             change = true; // 魔方状态也改变过了
         }
         if(!fini_rota) {
             for (int i = 0; i < cube3D::N; i++) {
-                if (Cube.get_position(i).y == 1) {
+                if (Cube.get_position(i).y == -1) {
                     //std::cout << fini_rota << "test " << std::endl;
                     glm::mat4 model;
                     model = glm::rotate(model, radians, cube3D::y_axis);
@@ -157,81 +193,8 @@ int main()
                 }
             }
         }
-/*
-        shader.setVec4("ourColor", cube::colors[1]);
-        glm::mat4 model;
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-        shader.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 6);  // back
-
-        shader.setVec4("ourColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)); // front
-        glDrawArrays(GL_TRIANGLES, 6, 6); // 前
-
-        shader.setVec4("ourColor", cube::colors[2]); // 左
-        glDrawArrays(GL_TRIANGLES, 12, 6); // 画剩余的24个顶点
-
-        shader.setVec4("ourColor", cube::colors[3]); // 右
-        glDrawArrays(GL_TRIANGLES, 18, 6);
-
-        shader.setVec4("ourColor", cube::colors[4]); // 下
-        glDrawArrays(GL_TRIANGLES, 24, 6);
-
-        shader.setVec4("ourColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
         */
-/*
-        float rotatespeed = 20.0f;
-        float radians = (rotatespeed * glm::radians(glfwGetTime()) > glm::radians(90.0f) )? glm::radians(90.0f) : rotatespeed * glm::radians(glfwGetTime());
-        if(radians == glm::radians(90.0f)) {
-            if(rad2 < glm::radians(90.0f))
-                rad2 += 0.005;
-            else
-                rad2 = glm::radians(90.0f);
-        }
-        for(unsigned int i = 0; i < 7; i++){
-            glm::mat4 model;
 
-            if(i == 4) {
-                if(radians == glm::radians(90.0f)) {
-                    model = glm::rotate(model, rad2, glm::vec3(1.0f, 0.0f, 0.0f));
-                }
-            }
-            if(i == 5){
-                model = glm::rotate(model, radians, glm::vec3(0.0f,1.0f,0.0f)); // 再旋转
-            }
-            model = glm::translate(model, middlePositions[i]); // 先平移
-            // float angle = 20.0f * i;
-            //model = glm::rotate(model, (float)glfwGetTime() * glm::radians(-45.0f), glm::vec3(xX, xY, 0.0f));
-            shader.setMat4("model", model);
-
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
-
-        for(auto p : edgePosition){
-            glm::mat4 model;
-            // glm::vec3 p2 = ;//变换后的矩阵乘以 p
-            if(p.x == 1.0f) {
-                if(radians == glm::radians(90.0f)) {
-                    model = glm::rotate(model, rad2, glm::vec3(1.0f, 0.0f, 0.0f));
-                }
-            }
-            if(p.y == 1.0f) {
-                model = glm::rotate(model, radians, glm::vec3(0.0f, 1.0f, 0.0f));
-            }
-            model = glm::translate(model, p);
-            shader.setMat4("model", model);
-
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
-        for(auto p : cornerPosition){
-            glm::mat4 model;
-            if(p.y == 1.0f) {
-                model = glm::rotate(model, radians, glm::vec3(0.0f, 1.0f, 0.0f));
-            }
-            model = glm::translate(model, p);
-            shader.setMat4("model", model);
-            glDrawArrays(GL_TRIANGLES, 0, 36);
-        }
-        */
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

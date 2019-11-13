@@ -6,96 +6,175 @@
 
 namespace view_gl {
 
+    const float drawer::ninety_degree = glm::radians(90.0f);
+
     drawer::drawer(){
-        window = nullptr;
+        rotate_speed = 0.01f;
+        radians = 0.0f;
     }
 
     drawer::~drawer() {
-        glDeleteVertexArrays(1, &VAO);
-        glDeleteBuffers(1, &VBO);
 
-        glfwTerminate();
     }
 
-    void drawer::init() {
-        glfwInit();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-#ifdef __APPLE__
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
-#endif
-
-        // glfw window creation
-        // --------------------
-        window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "MagicCube", NULL, NULL);
-        if (window == NULL) {
-            std::cout << "Failed to create GLFW window" << std::endl;
-            glfwTerminate();
-            exit(EXIT_FAILURE);
-        }
-        glfwMakeContextCurrent(window);
-        glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // 让程序获得鼠标
-        glfwSetCursorPosCallback(window, mouse_callback);
-
-        glfwSetScrollCallback(window, scroll_callback);
-
-        // glad: load all OpenGL function pointers
-        // ---------------------------------------
-        if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
-            std::cout << "Failed to initialize GLAD" << std::endl;
-            exit(EXIT_FAILURE);
-        }
-
-        Cube = cube3D::cube();
-
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-
-        glBindVertexArray(VAO);
-
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(cube3D::cube::block), cube3D::cube::block, GL_STATIC_DRAW);
-
-        // position attribute vs中的位置，属性大小，，，步长，偏移量
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
-        glEnableVertexAttribArray(0);
-        // texture coord attribute
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
-        glEnableVertexAttribArray(1);
-
-        texture = LoadTexture("GLSL/container2.png");
-
-        glEnable(GL_DEPTH_TEST);
-    }
-
-    void drawer::drawing() {
-        while (!glfwWindowShouldClose(window)) {
-            processInput(window);
-
-            // render
-            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            // bind Texture
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, texture);
-
-            float currentFrame = glfwGetTime();
-            deltaTime = currentFrame - lastFrame;
-            lastFrame = currentFrame;
-
-            //static_draw();
+    void drawer::static_draw(const cube3D::cube& Cube, Shader& shader) {
+        for(int i = 0; i < cube3D::N; i++){ // success
+            glm::mat4 model = Cube.get_model(i);
+            Cube.draw(shader, model, i);
         }
     }
 
-    void drawer::static_draw(Shader& shader) {
-        for (int i = 0; i < cube3D::N; i++) {
-            shader.setMat4("model", Cube.get_model(i));
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+    bool drawer::rotate_U(cube3D::cube &Cube, Shader &shader) {
+        if(radians < ninety_degree){ // 转动未完成
+
+            radians += rotate_speed;
+
+            for (int i = 0; i < cube3D::N; i++) {
+                if (Cube.get_position(i).y == 1.0f){ // 转动需要转动的小块
+                    glm::mat4 model;
+                    model = glm::rotate(model, -radians, cube3D::y_axis);
+                    model = model * Cube.get_model(i);
+                    Cube.draw(shader, model, i);
+                } else {
+                    Cube.draw(shader, Cube.get_model(i), i); // 其他的按原来画
+                }
+            }
+            return false;
+        } else {
+            radians = 0.0f;
+            Cube.rotate_cube(cube3D::top, 1); // 改变魔方状态, 顶层顺时针旋转90
+            return true;
+        }
+    }
+
+    bool drawer::rotate_D(cube3D::cube &Cube, Shader &shader) { // 旋转底层
+        if(radians < ninety_degree){ // 转动未完成
+
+            radians += rotate_speed;
+
+            for (int i = 0; i < cube3D::N; i++) {
+                if (Cube.get_position(i).y == -1.0f){ // 转动需要转动的小块
+                    glm::mat4 model;
+                    model = glm::rotate(model, radians, cube3D::y_axis);
+                    model = model * Cube.get_model(i);
+                    Cube.draw(shader, model, i);
+                } else {
+                    Cube.draw(shader, Cube.get_model(i), i); // 其他的按原来画
+                }
+            }
+            return false;
+        } else {
+            radians = 0.0f;
+            Cube.rotate_cube(cube3D::bottom, 1); // 改变魔方状态, 底层顺时针旋转90
+            return true;
+        }
+    }
+
+    bool drawer::rotate_L(cube3D::cube &Cube, Shader &shader) {
+        if(radians < ninety_degree){ // 转动未完成
+
+            radians += rotate_speed;
+
+            for (int i = 0; i < cube3D::N; i++) {
+                if (Cube.get_position(i).x == -1.0f){ // 转动需要转动的小块
+                    glm::mat4 model;
+                    model = glm::rotate(model, radians, cube3D::x_axis);
+                    model = model * Cube.get_model(i);
+                    Cube.draw(shader, model, i);
+                } else {
+                    Cube.draw(shader, Cube.get_model(i), i); // 其他的按原来画
+                }
+            }
+            return false;
+        } else {
+            radians = 0.0f;
+            Cube.rotate_cube(cube3D::left, 1); // 改变魔方状态, L面顺时针旋转90
+            for(int i = 0; i < cube3D::N; i++) {
+                glm::mat4 model = Cube.get_model(i);
+                Cube.draw(shader, model, i);
+            }
+            return true;
+        }
+    }
+
+    bool drawer::rotate_R(cube3D::cube &Cube, Shader &shader) {
+        if(radians < ninety_degree){ // 转动未完成
+
+            radians += rotate_speed;
+
+            for (int i = 0; i < cube3D::N; i++) {
+                if (Cube.get_position(i).x == 1.0f){ // 转动需要转动的小块
+                    glm::mat4 model;
+                    model = glm::rotate(model, -radians, cube3D::x_axis);
+                    model = model * Cube.get_model(i);
+                    Cube.draw(shader, model, i);
+                } else {
+                    Cube.draw(shader, Cube.get_model(i), i); // 其他的按原来画
+                }
+            }
+            return false;
+        } else {
+            radians = 0.0f;
+            Cube.rotate_cube(cube3D::right, 1); // 改变魔方状态, L面顺时针旋转90
+            for(int i = 0; i < cube3D::N; i++) {
+                glm::mat4 model = Cube.get_model(i);
+                Cube.draw(shader, model, i);
+            }
+            return true;
+        }
+    }
+
+    bool drawer::rotate_F(cube3D::cube &Cube, Shader &shader) {
+        if(radians < ninety_degree){ // 转动未完成
+
+            radians += rotate_speed;
+
+            for (int i = 0; i < cube3D::N; i++) {
+                if (Cube.get_position(i).z == 1.0f){ // 转动需要转动的小块
+                    glm::mat4 model;
+                    model = glm::rotate(model, -radians, cube3D::z_axis);
+                    model = model * Cube.get_model(i);
+                    Cube.draw(shader, model, i);
+                } else {
+                    Cube.draw(shader, Cube.get_model(i), i); // 其他的按原来画
+                }
+            }
+            return false;
+        } else {
+            radians = 0.0f;
+            Cube.rotate_cube(cube3D::front, 1); // 改变魔方状态, L面顺时针旋转90
+            for(int i = 0; i < cube3D::N; i++) {
+                glm::mat4 model = Cube.get_model(i);
+                Cube.draw(shader, model, i);
+            }
+            return true;
+        }
+    }
+
+    bool drawer::rotate_B(cube3D::cube &Cube, Shader &shader) {
+        if(radians < ninety_degree){ // 转动未完成
+
+            radians += rotate_speed;
+
+            for (int i = 0; i < cube3D::N; i++) {
+                if (Cube.get_position(i).z == -1.0f){ // 转动需要转动的小块
+                    glm::mat4 model;
+                    model = glm::rotate(model, radians, cube3D::z_axis);
+                    model = model * Cube.get_model(i);
+                    Cube.draw(shader, model, i);
+                } else {
+                    Cube.draw(shader, Cube.get_model(i), i); // 其他的按原来画
+                }
+            }
+            return false;
+        } else {
+            radians = 0.0f;
+            Cube.rotate_cube(cube3D::back, 1); // 改变魔方状态, L面顺时针旋转90
+            for(int i = 0; i < cube3D::N; i++) {
+                glm::mat4 model = Cube.get_model(i);
+                Cube.draw(shader, model, i);
+            }
+            return true;
         }
     }
 }
