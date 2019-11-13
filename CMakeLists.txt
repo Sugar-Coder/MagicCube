@@ -17,8 +17,6 @@ aux_source_directory(src SRC_LIST)
 
 add_executable(MagicCube ${SRC_LIST})
 
-add_executable(test test/test.cpp)
-
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
 if (APPLE)

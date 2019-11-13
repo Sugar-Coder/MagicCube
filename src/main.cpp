@@ -19,7 +19,6 @@ int main()
 #endif
 
     // glfw window creation
-    // --------------------
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "MagicCube", NULL, NULL);
     if (window == NULL)
     {
@@ -55,11 +54,8 @@ int main()
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cube::block), cube::block, GL_STATIC_DRAW);
-
-    // position attribute vs中的位置，属性大小，，，步长，偏移量
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    // texture coord attribute
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
@@ -70,9 +66,6 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
 
-    bool fini_rota = false;
-    float rad2 = 0.0f;
-    bool change = false;
     for(int i = 0; i < 6; i++){
         finish[i] = true;
     }
@@ -82,8 +75,6 @@ int main()
         processInput(window);
 
         // render
-        // ------
-        // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -152,48 +143,6 @@ int main()
         } else {
             drawer.static_draw(Cube, shader);
         }
-
-/*
-        float rotatespeed = 20.0f;
-        float radians = (rotatespeed * glm::radians(glfwGetTime()) > glm::radians(90.0f) )? glm::radians(90.0f) : rotatespeed * glm::radians(glfwGetTime());
-        if (radians == glm::radians(90.0f) && !change) {  // 第一个旋转结束
-            fini_rota = true;
-            Cube.rotate_cube(cube3D::bottom, 1); // 改变魔方状态
-            change = true; // 魔方状态也改变过了
-        }
-        if(!fini_rota) {
-            for (int i = 0; i < cube3D::N; i++) {
-                if (Cube.get_position(i).y == -1) {
-                    //std::cout << fini_rota << "test " << std::endl;
-                    glm::mat4 model;
-                    model = glm::rotate(model, radians, cube3D::y_axis);
-                    model = glm::translate(model, Cube.get_position(i));
-                    Cube.draw(shader, model, i);
-                } else {
-                    Cube.draw(shader, Cube.get_model(i), i);
-                }
-            }
-        } else {
-            if(rad2 < glm::radians(90.0f))
-                rad2 += 0.005;
-            else
-                rad2 = glm::radians(90.0f);
-            for (int i = 0; i < cube3D::N; i++) {
-                if (Cube.get_position(i).z == 1.0f){
-                    glm::mat4 model;
-                    model = glm::rotate(model, rad2, cube3D::z_axis);
-                    model = model * Cube.get_model(i);
-                    //shader.setMat4("model", model);
-                    //glDrawArrays(GL_TRIANGLES, 0, 36);
-                    Cube.draw(shader, model, i);
-                } else {
-                    // shader.setMat4("model", Cube.get_model(i));
-                    // glDrawArrays(GL_TRIANGLES, 0, 36);
-                    Cube.draw(shader, Cube.get_model(i), i);
-                }
-            }
-        }
-        */
 
         glfwSwapBuffers(window);
         glfwPollEvents();
