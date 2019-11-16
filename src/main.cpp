@@ -66,7 +66,7 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
 
-    for(int i = 0; i < 6; i++){
+    for(int i = 0; i < RN; i++){
         finish[i] = true;
     }
     while (!glfwWindowShouldClose(window)) {
@@ -136,6 +136,48 @@ int main()
         } else if(!finish[B]){
             if(drawer.rotate_B(Cube, shader)){
                 finish[B] = true;
+                screen = false;
+            } else {
+                screen = true;
+            }
+        } else if(!finish[Ur]){
+            if(drawer.rotate_Ur(Cube, shader)){
+                finish[Ur] = true;
+                screen = false;
+            } else {
+                screen = true;
+            }
+        } else if(!finish[Dr]){
+            if(drawer.rotate_Dr(Cube, shader)){
+                finish[Dr] = true;
+                screen = false;
+            } else {
+                screen = true;
+            }
+        } else if(!finish[Lr]){
+            if(drawer.rotate_Lr(Cube, shader)){
+                finish[Lr] = true;
+                screen = false;
+            } else {
+                screen = true;
+            }
+        } else if(!finish[Rr]){
+            if(drawer.rotate_Rr(Cube, shader)){
+                finish[Rr] = true;
+                screen = false;
+            } else {
+                screen = true;
+            }
+        } else if(!finish[Br]){
+            if(drawer.rotate_Br(Cube, shader)){
+                finish[Br] = true;
+                screen = false;
+            } else {
+                screen = true;
+            }
+        } else if(!finish[Fr]){
+            if(drawer.rotate_Fr(Cube, shader)){
+                finish[Fr] = true;
                 screen = false;
             } else {
                 screen = true;

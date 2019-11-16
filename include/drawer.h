@@ -27,6 +27,13 @@ namespace view_gl {
         bool rotate_D(cube3D::cube& Cube, Shader& shader);
         bool rotate_F(cube3D::cube& Cube, Shader& shader);
         bool rotate_B(cube3D::cube& Cube, Shader& shader);
+
+        bool rotate_Ur(cube3D::cube& Cube, Shader& shader);
+        bool rotate_Lr(cube3D::cube& Cube, Shader& shader);
+        bool rotate_Dr(cube3D::cube& Cube, Shader& shader);
+        bool rotate_Rr(cube3D::cube& Cube, Shader& shader);
+        bool rotate_Fr(cube3D::cube& Cube, Shader& shader);
+        bool rotate_Br(cube3D::cube& Cube, Shader& shader);
     };
 }
 

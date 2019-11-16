@@ -58,6 +58,30 @@ void processInput(GLFWwindow *window) {
             screen = true;
             finish[B] = false;
         }
+        if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS){ // 上面逆向(Y）
+            screen = true;
+            finish[Ur] = false;
+        }
+        if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS){
+            screen = true;
+            finish[Dr] = false;
+        }
+        if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS){
+            screen = true;
+            finish[Lr] = false;
+        }
+        if (glfwGetKey(window, GLFW_KEY_SEMICOLON) == GLFW_PRESS){
+            screen = true;
+            finish[Rr] = false;
+        }
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS){
+            screen = true;
+            finish[Br] = false;
+        }
+        if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS){
+            screen = true;
+            finish[Fr] = false;
+        }
     }
 }
 

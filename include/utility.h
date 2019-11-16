@@ -27,10 +27,10 @@ extern float deltaTime; // 当前帧与上一帧的时间差
 extern float lastFrame; // 上一帧的时间
 
 extern bool screen; // 屏蔽标志,有键被按下后被设置为true，直到一次旋转完成
-const int RN = 6;
+const int RN = 12;
 extern bool finish[RN]; // 按键被按下的标志，R, L, U, D, F, B
 // extern bool key_press[RN];   //           u, j, i, k, o, l
-enum rotate_type{R, L, U, D, F, B};
+enum rotate_type{R, L, U, D, F, B, Rr, Lr, Ur, Dr, Fr, Br};
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
