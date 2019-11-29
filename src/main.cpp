@@ -59,8 +59,8 @@ int main()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    unsigned int texture1 = LoadTexture("GLSL/container2.png");
-    Shader shader("GLSL/shader.vs", "GLSL/shader.fs");
+    unsigned int texture1 = LoadTexture("../GLSL/container2.png"); // 把工作路径设置为bin达到和终端一样的效果
+    Shader shader("../GLSL/shader.vs", "../GLSL/shader.fs"); // ../GLSL/shader.fs 在命令行运行时用相对路径
     shader.use();
     shader.setInt("texture1", 0);
 
