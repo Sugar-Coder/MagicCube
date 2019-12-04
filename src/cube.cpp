@@ -4,13 +4,10 @@
 
 #include "cube.h"
 #include <cmath>
-#include <iostream>
 #include <vector>
 #include <bitset>
 
 namespace cube3D{
-
-    // Shader cube::shader("GLSL/shader.vs", "GLSL/shader.fs");
 
     float cube::block[180] = {
             -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // back

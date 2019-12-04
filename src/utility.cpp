@@ -4,6 +4,7 @@
 
 #include "utility.h"
 #include "stb_image.h"  // 加载图片
+#include "recover.h"
 
 float lastX = SCR_WIDTH / 2.0f, lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -18,6 +19,7 @@ bool screen = false; // 无屏蔽
 bool finish[RN] = {true};
 
 void processInput(GLFWwindow *window) {
+    recover Recover;
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
     // float cameraSpeed = 2.5f * deltaTime;  // 现在在camera类中完成帧延时
@@ -37,50 +39,66 @@ void processInput(GLFWwindow *window) {
         if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS){ // 上面(键盘U控制）
             screen = true;
             finish[U] = false;
+            Recover.get_rotate(U);
         }
         if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS){  // 下面（键盘J控制）
             screen = true;
             finish[D] = false;
+            Recover.get_rotate(D);
         }
         if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS){  // 左面（键盘K控制）
             screen = true;
             finish[L] = false;
+            Recover.get_rotate(L);
         }
         if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS){ // 右面（键盘L控制）
             screen = true;
             finish[R] = false;
+            Recover.get_rotate(R);
         }
         if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS){ // 正面（键盘I控制）
             screen = true;
             finish[F] = false;
+            Recover.get_rotate(F);
         }
         if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS){ // 正面（键盘I控制）
             screen = true;
             finish[B] = false;
+            Recover.get_rotate(B);
         }
         if (glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS){ // 上面逆向(Y）
             screen = true;
             finish[Ur] = false;
+            Recover.get_rotate(Ur);
         }
         if (glfwGetKey(window, GLFW_KEY_H) == GLFW_PRESS){
             screen = true;
             finish[Dr] = false;
+            Recover.get_rotate(Dr);
         }
         if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS){
             screen = true;
             finish[Lr] = false;
+            Recover.get_rotate(Lr);
         }
         if (glfwGetKey(window, GLFW_KEY_SEMICOLON) == GLFW_PRESS){
             screen = true;
             finish[Rr] = false;
+            Recover.get_rotate(Rr);
         }
         if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS){
             screen = true;
             finish[Br] = false;
+            Recover.get_rotate(Br);
         }
         if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS){
             screen = true;
             finish[Fr] = false;
+            Recover.get_rotate(Fr);
+        }
+        if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS){
+            screen = true;
+            finish[RECO] = false;
         }
     }
 }

@@ -4,6 +4,7 @@
 #include "Shader.hpp"
 #include "cube.h"
 #include "drawer.h"
+#include "recover.h"
 
 using cube3D::cube;
 
@@ -45,6 +46,8 @@ int main()
     cube3D::cube Cube;
 
     view_gl::drawer drawer;
+
+    recover Recover;
 
     unsigned int VBO, VAO;
     glGenVertexArrays(1, &VAO);
@@ -178,6 +181,13 @@ int main()
         } else if(!finish[Fr]){
             if(drawer.rotate_Fr(Cube, shader)){
                 finish[Fr] = true;
+                screen = false;
+            } else {
+                screen = true;
+            }
+        } else if(!finish[RECO]){
+            if(Recover.Recovering(drawer, Cube, shader)){  // 完成了复原
+                finish[RECO] = true;
                 screen = false;
             } else {
                 screen = true;

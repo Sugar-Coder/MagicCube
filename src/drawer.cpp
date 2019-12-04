@@ -9,7 +9,7 @@ namespace view_gl {
     const float drawer::ninety_degree = glm::radians(90.0f);
 
     drawer::drawer(){
-        rotate_speed = 0.01f;
+        rotate_speed = 0.02f;  // 旋转速度
         radians = 0.0f;
     }
 
