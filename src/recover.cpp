@@ -7,7 +7,7 @@
 using view_gl::drawer;
 using cube3D::cube;
 
-std::vector<int> recover::step_record;
+std::vector<int> recover::step_record;  // 类静态变量记得定义
 
 recover::recover() {
 
