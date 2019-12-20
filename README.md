@@ -7,7 +7,7 @@ $mkdir bin
 $cd bin
 $cmake
 $make
-#./MagicCube
+$./MagicCube
 ```
 A magicCube game that developed for OpenGL and c++ practice<br>
 可用键盘控制，旋转魔方，回车复原魔方

@@ -6,6 +6,8 @@
 #include "stb_image.h"  // 加载图片
 #include "recover.h"  // 注意，只在这里包含就可以了，放到utility.h中容易重复包含，反正我的recoder是类变量
 
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);  // 世界坐标中光源的位置
+
 float lastX = SCR_WIDTH / 2.0f, lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
 

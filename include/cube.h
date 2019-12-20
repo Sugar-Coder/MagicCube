@@ -63,7 +63,7 @@ namespace cube3D {
         static void pos_round(glm::vec3& position);  // 对变换后的坐标取整
     public:
         static const glm::vec4 colors[7]; // 6种魔方标准色和一个透明色
-        static float block[180];  // 一个小块的三角形点的坐标，用于渲染
+        static float block[288];  // 一个小块的三角形点的坐标，用于渲染
         cube();
         /* rotate a face 90 * count degree clockwise */
         void rotate_cube(face_type t, int count = 1);  // 完成一次变换后更新model和position

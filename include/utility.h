@@ -22,6 +22,7 @@ extern bool firstMouse;
 
 extern Camera camera;  // 仅传入相机位置
 
+extern glm::vec3 lightPos;  // 世界坐标中光源的位置
 
 // timing
 extern float deltaTime; // 当前帧与上一帧的时间差

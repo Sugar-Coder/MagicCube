@@ -57,17 +57,28 @@ int main()
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cube::block), cube::block, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
 
     unsigned int texture1 = LoadTexture("../GLSL/container2.png"); // 把工作路径设置为bin达到和终端一样的效果
-    Shader shader("../GLSL/shader.vs", "../GLSL/shader.fs"); // ../GLSL/shader.fs 在命令行运行时用相对路径
-    shader.use();
-    shader.setInt("texture1", 0);
+    Shader cubeShader("../GLSL/shader.vs", "../GLSL/shader.fs"); // ../GLSL/shader.fs 在命令行运行时用相对路径
+    cubeShader.use();
+    cubeShader.setInt("texture1", 0);
 
     glEnable(GL_DEPTH_TEST);
+
+    Shader lampShader("../GLSL/lamp.vs", "../GLSL/lamp.fs");
+    unsigned int lightVAO;
+    glGenVertexArrays(1, &lightVAO);
+    glBindVertexArray(lightVAO);
+    // 只需要绑定VBO不用再次设置VBO的数据，因为箱子的VBO数据中已经包含了正确的立方体顶点数据
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    // 设置灯立方体的顶点属性（对我们的灯来说仅仅只有位置数据）
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
 
     for(int i = 0; i < RN; i++){
         finish[i] = true;
@@ -94,106 +105,106 @@ int main()
         view = camera.GetViewMatrix();
         projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.0f);
 
-        shader.use();
-        shader.setMat4("view", view);
-        shader.setMat4("projection", projection);
-        shader.setVec4("ourColor",cube3D::cube::colors[0]);
+        cubeShader.use();
+        cubeShader.setMat4("view", view);
+        cubeShader.setMat4("projection", projection);
+        cubeShader.setVec4("ourColor",cube3D::cube::colors[0]);
 
         glBindVertexArray(VAO);
 
         if(!finish[U]){
-            if(drawer.rotate_U(Cube, shader)){
+            if(drawer.rotate_U(Cube, cubeShader)){
                 finish[U] = true;
                 screen = false;
             } else {
                 screen = true;
             }
         } else if(!finish[D]){
-            if(drawer.rotate_D(Cube, shader)){
+            if(drawer.rotate_D(Cube, cubeShader)){
                 finish[D] = true;
                 screen = false;
             } else {
                 screen = true;
             }
         } else if(!finish[L]){
-            if(drawer.rotate_L(Cube, shader)){
+            if(drawer.rotate_L(Cube, cubeShader)){
                 finish[L] = true;
                 screen = false;
             } else {
                 screen = true;
             }
         } else if(!finish[R]){
-            if(drawer.rotate_R(Cube, shader)){
+            if(drawer.rotate_R(Cube, cubeShader)){
                 finish[R] = true;
                 screen = false;
             } else {
                 screen = true;
             }
         } else if(!finish[F]){
-            if(drawer.rotate_F(Cube, shader)){
+            if(drawer.rotate_F(Cube, cubeShader)){
                 finish[F] = true;
                 screen = false;
             } else {
                 screen = true;
             }
         } else if(!finish[B]){
-            if(drawer.rotate_B(Cube, shader)){
+            if(drawer.rotate_B(Cube, cubeShader)){
                 finish[B] = true;
                 screen = false;
             } else {
                 screen = true;
             }
         } else if(!finish[Ur]){
-            if(drawer.rotate_Ur(Cube, shader)){
+            if(drawer.rotate_Ur(Cube, cubeShader)){
                 finish[Ur] = true;
                 screen = false;
             } else {
                 screen = true;
             }
         } else if(!finish[Dr]){
-            if(drawer.rotate_Dr(Cube, shader)){
+            if(drawer.rotate_Dr(Cube, cubeShader)){
                 finish[Dr] = true;
                 screen = false;
             } else {
                 screen = true;
             }
         } else if(!finish[Lr]){
-            if(drawer.rotate_Lr(Cube, shader)){
+            if(drawer.rotate_Lr(Cube, cubeShader)){
                 finish[Lr] = true;
                 screen = false;
             } else {
                 screen = true;
             }
         } else if(!finish[Rr]){
-            if(drawer.rotate_Rr(Cube, shader)){
+            if(drawer.rotate_Rr(Cube, cubeShader)){
                 finish[Rr] = true;
                 screen = false;
             } else {
                 screen = true;
             }
         } else if(!finish[Br]){
-            if(drawer.rotate_Br(Cube, shader)){
+            if(drawer.rotate_Br(Cube, cubeShader)){
                 finish[Br] = true;
                 screen = false;
             } else {
                 screen = true;
             }
         } else if(!finish[Fr]){
-            if(drawer.rotate_Fr(Cube, shader)){
+            if(drawer.rotate_Fr(Cube, cubeShader)){
                 finish[Fr] = true;
                 screen = false;
             } else {
                 screen = true;
             }
         } else if(!finish[RECO]){
-            if(Recover.Recovering(drawer, Cube, shader)){  // 完成了复原
+            if(Recover.Recovering(drawer, Cube, cubeShader)){  // 完成了复原
                 finish[RECO] = true;
                 screen = false;
             } else {
                 screen = true;
             }
         } else {
-            drawer.static_draw(Cube, shader);
+            drawer.static_draw(Cube, cubeShader);
         }
 
         glfwSwapBuffers(window);
