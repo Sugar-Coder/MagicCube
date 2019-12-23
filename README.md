@@ -12,3 +12,5 @@ $make
 A magicCube game that developed for OpenGL and c++ practice<br>
 可用键盘控制，旋转魔方，回车复原魔方
 ### 复原算法1:反着转回来😜
+-----
+![screenshot](https://github.com/Sugar-Coder/MagicCube/raw/master/rotate.gif)
