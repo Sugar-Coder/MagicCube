@@ -20,6 +20,11 @@ in vec3 FragPos;
 out vec4 FragColor;
 
 // uniform sampler2D texture1;  // now use Material.diffuse
+uniform Material material;
+uniform Light light;
+
+uniform vec3 viewPos; // 相机的位置
+
 uniform vec4 ourColor;
 
 void main()
@@ -32,7 +37,7 @@ void main()
     vec3 reflectDir = reflect(-lightDir, norm); // 反射光线方向
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
 
-    vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
+    vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoord));
     vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoord));
     vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoord));
 

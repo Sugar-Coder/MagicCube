@@ -70,6 +70,7 @@ int main()
 
     glEnable(GL_DEPTH_TEST);
 
+    // 灯的着色器
     Shader lampShader("../GLSL/lamp.vs", "../GLSL/lamp.fs");
     unsigned int lightVAO;
     glGenVertexArrays(1, &lightVAO);
@@ -83,6 +84,8 @@ int main()
     for(int i = 0; i < RN; i++){
         finish[i] = true;
     }
+    float lighty = lightPos.y;
+
     while (!glfwWindowShouldClose(window)) {
         // input
         // -----
@@ -105,7 +108,20 @@ int main()
         view = camera.GetViewMatrix();
         projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH/(float)SCR_HEIGHT, 0.1f, 100.0f);
 
+        lightPos.y = lighty + 3 * sin(glfwGetTime());
+
         cubeShader.use();
+        // 设置光照有关变量
+        cubeShader.setVec3("light.position", lightPos);
+        cubeShader.setVec3("viewPos", camera.Position);
+        //light properties
+        cubeShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+        cubeShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
+        cubeShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+
+        // material properties
+        cubeShader.setFloat("material.shininess", 64.0f);
+
         cubeShader.setMat4("view", view);
         cubeShader.setMat4("projection", projection);
         cubeShader.setVec4("ourColor",cube3D::cube::colors[0]);
@@ -206,6 +222,18 @@ int main()
         } else {
             drawer.static_draw(Cube, cubeShader);
         }
+
+        lampShader.use();   // 画一个灯
+        lampShader.setMat4("projection", projection);
+        lampShader.setMat4("view", view);
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.2f));
+        lampShader.setMat4("model", model);
+        // render the lamp
+        glBindVertexArray(lightVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
