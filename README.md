@@ -4,8 +4,8 @@ glad.c用于管理OpenGL指针,使用方法见：https://www.jianshu.com/p/891d6
 ### build
 ```bash
 $mkdir bin
-$cd bin
 $cmake
+$cd bin
 $make
 $./MagicCube
 ```
@@ -13,4 +13,7 @@ A magicCube game that developed for OpenGL and c++ practice<br>
 可用键盘控制，旋转魔方，回车复原魔方
 ### 复原算法1:反着转回来😜
 -----
-![screenshot](https://raw.githubusercontent.com/Sugar-Coder/MagicCube/master/rotate.gif)
+![screenshot](https://github.com/Sugar-Coder/MagicCube/blob/master/rotate.gif)
+----
+## 增加天空盒：
+![skybox](https://tva1.sinaimg.cn/large/006tNbRwgy1gbgrq1nve1j317y0ssnpd.jpg)
