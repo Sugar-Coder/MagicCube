@@ -81,6 +81,36 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    // skybox VAO
+    unsigned int skyboxVAO, skyboxVBO;
+    glGenVertexArrays(1, &skyboxVAO);
+    glGenBuffers(1, &skyboxVBO);
+    glBindVertexArray(skyboxVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cube3D::skyboxVertices), &cube3D::skyboxVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);   // 由于模仿的纹理坐标与天空盒不同，增加天空盒的纹理坐标skyboxTexCoords
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+
+    // load textures
+    std::vector<std::string> faces
+            {
+                    "../GLSL/darkskies/darkskies_ft.tga",
+                    "../GLSL/darkskies/darkskies_bk.tga",
+                    "../GLSL/darkskies/darkskies_dn.tga",
+                    "../GLSL/darkskies/darkskies_up.tga",
+                    "../GLSL/darkskies/darkskies_rt.tga",
+                    "../GLSL/darkskies/darkskies_lf.tga"
+            };
+    unsigned int cubemapTexture = loadCubemap(faces);
+
+    // skybox's shader
+    Shader skyboxShader("../GLSL/skybox.vs", "../GLSL/skybox.fs");
+    // configure
+    skyboxShader.use();
+    skyboxShader.setInt("skybox", 0);
+
     for(int i = 0; i < RN; i++){
         finish[i] = true;
     }
@@ -115,7 +145,7 @@ int main()
         cubeShader.setVec3("light.position", lightPos);
         cubeShader.setVec3("viewPos", camera.Position);
         //light properties
-        cubeShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+        cubeShader.setVec3("light.ambient", 0.9f, 0.9f, 0.9f);
         cubeShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
         cubeShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 
@@ -235,11 +265,27 @@ int main()
         glBindVertexArray(lightVAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
+        // draw skybox as last
+        glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
+        skyboxShader.use();
+        view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
+        skyboxShader.setMat4("view", view);
+        skyboxShader.setMat4("projection", projection);
+        // skybox cube
+        glBindVertexArray(skyboxVAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        glDepthFunc(GL_LESS); // set depth function back to default
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    glDeleteVertexArrays(1, &skyboxVAO);
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &skyboxVBO);
 
     glfwTerminate();
     return 0;

@@ -39,6 +39,7 @@ void processInput(GLFWwindow *window);
 void mouse_callback(GLFWwindow * window, double xpos, double ypos);
 void scroll_callback(GLFWwindow * window, double xoffset, double yoffset); // 鼠标滚轮
 unsigned int LoadTexture(std::string filepath);
+unsigned int loadCubemap(std::vector<std::string> faces);
 
 void printVec3(glm::vec3& v);
 void printMat4(glm::mat4& m);

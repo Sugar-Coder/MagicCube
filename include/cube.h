@@ -31,6 +31,8 @@ namespace cube3D {
     const glm::vec3 x_axis = glm::vec3(1.0f, 0.0f, 0.0f);
     const glm::vec3 y_axis = glm::vec3(0.0f, 1.0f, 0.0f);
 
+    extern float skyboxVertices[180];
+
     class cube {
     private:
         static const glm::vec3 init_positions[N]; // 26个小块的初始位置
