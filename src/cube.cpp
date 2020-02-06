@@ -55,7 +55,7 @@ namespace cube3D{
     };
 
     float skyboxVertices[] = {
-            // positions       // skybox texture coordinate
+            // positions       // skybox texture coordinate(多余！）
             -1.0f,  1.0f, -1.0f,0.0f, 0.0f,
             -1.0f, -1.0f, -1.0f,1.0f, 0.0f,
             1.0f, -1.0f, -1.0f,1.0f, 1.0f,
