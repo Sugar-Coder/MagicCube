@@ -3,10 +3,11 @@ glm库用于做线性代数矩阵运算，一个只有头文件的库，放到us
 glad.c用于管理OpenGL指针,使用方法见：https://www.jianshu.com/p/891d630e30af<br>
 ### build
 ```bash
-$mkdir bin
-$cmake
-$cd bin
+$mkdir build
+$cd build
+$cmake ..
 $make
+$cd ../bin
 $./MagicCube
 ```
 A magicCube game that developed for OpenGL and c++ practice<br>
