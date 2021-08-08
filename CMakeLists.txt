@@ -4,14 +4,10 @@ project(MagicCube)
 set(CMAKE_CXX_STANDARD 11)
 
 set(GLFW_H /usr/local/Cellar/glfw/3.2.1/include/GLFW)
-set(GLEW_H /usr/local/Cellar/glew/2.1.0/include/GL)
-set(INC_H /usr/local/include)
+include_directories(${GLFW_H} include)
 
-include_directories(${GLFW_H} ${GLEW_H} ${INC_H} include)
-
-set(GLEW_LINK /usr/local/Cellar/glew/2.1.0/lib/libGLEW.2.1.dylib)
 set(GLFW_LINK /usr/local/Cellar/glfw/3.2.1/lib/libglfw.3.2.dylib)
-link_libraries(${OPENGL} ${GLEW_LINK} ${GLFW_LINK})
+link_libraries(${OPENGL} ${GLFW_LINK})
 
 aux_source_directory(src SRC_LIST)
 
